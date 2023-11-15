@@ -1,0 +1,54 @@
+id: MuleSoft Custom Policy
+name: MuleSoft Custom Policy
+description: MuleSoft Custom Policy Description
+category: Custom
+type: custom
+resourceLevelSupported: true
+encryptionSupported: false
+standalone: true
+requiredCharacteristics: []
+providedCharacteristics: []
+configuration: 
+
+   - propertyName: checkLogRequest
+     name: checkForLogRequest
+     description: DO you want to log the request
+     optional: true
+     type: boolean
+     defaultValue: false
+     
+   - propertyName: inputRequest
+     name: inputRequest
+     description: Provide the dataweave expression to log the message
+     optional: true
+     type: expression
+     sensitive: false
+     allowMultiple: false
+     dependsOnKey: checkLogRequest
+     dependsOnValue: true
+     
+   - propertyName: checkBoxRequest
+     name: checkBoxRequest
+     description: select your choice
+     optional: true
+     type: boolean
+     defaultValue: false
+     
+   - propertyName: checkBoxInputSelection
+     name: Radio Buttons
+     description: select your choice      
+     type: radio
+     options: #Defines radio button group
+     - name: mulesoft
+       value: mulesoft
+     - name: webMethods
+       value: webMethods
+     - name: boomi
+       value: boomi
+     optional: false
+     defaultValue: webMethods
+     dependsOnKey: checkBoxRequest
+     dependsOnValue: true
+       
+     
+  

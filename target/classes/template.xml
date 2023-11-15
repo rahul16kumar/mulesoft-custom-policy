@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:http-policy="http://www.mulesoft.org/schema/mule/http-policy"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+               http://www.mulesoft.org/schema/mule/http-policy http://www.mulesoft.org/schema/mule/http-policy/current/mule-http-policy.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+
+
+	<http-policy:proxy
+		name="{{{policyId}}}-custom-policy">
+		<http-policy:source>
+		
+			<set-variable value="{{{checkBoxInputSelection}}}"
+				doc:name="Set Variable"
+				doc:id="49400af4-c59e-440b-adc1-393958a29152"
+				variableName="saveTheRadioButtonValue" />
+			<choice doc:name="Choice"
+				doc:id="36d0f7d3-5de4-44e5-8602-33d5a467d440">
+				<when
+					expression='#[vars.saveTheRadioButtonValue == "mulesoft"]'>
+					<ee:transform doc:name="Transform Message"
+						doc:id="c11b4a1a-4611-4de1-94d2-30d4ccf9b804">
+						<ee:message>
+						</ee:message>
+						<ee:variables>
+							<ee:set-variable variableName="muleVar"><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"k1":"You have selected MuleSoft"
+}]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+					<logger level="INFO" doc:name="Logger"
+						doc:id="aea1cbcf-b6dd-4a82-85ac-d8771effecd0"
+						message="This is MuleSoft. #[vars.muleVar]" />
+				</when>
+				<when
+					expression='#[vars.saveTheRadioButtonValue == "webMethods"]'>
+					<ee:transform doc:name="Transform Message"
+						doc:id="2d0613dd-512b-402d-93ad-b4abdb373d55">
+						<ee:message>
+						</ee:message>
+						<ee:variables>
+							<ee:set-variable variableName="webVar"><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"k1":"You have selected WebMethods"
+}]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+					<logger level="INFO" doc:name="Logger"
+						doc:id="dd4a7e7d-60e3-47a4-81cc-69d7e91579cf"
+						message="This is webMethods. #[vars.webVar]" />
+				</when>
+				<otherwise>
+					<ee:transform doc:name="Transform Message"
+						doc:id="543af68c-1026-4695-8991-5db6edf790a0">
+						<ee:message>
+						</ee:message>
+						<ee:variables>
+							<ee:set-variable variableName="boomiVar"><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"k1":"You have selected Boomi"
+}]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+					<logger level="INFO" doc:name="Logger"
+						doc:id="909ca94f-9eb3-417c-9662-fa80f7bed84a"
+						message="This is Boomi. #[vars.boomiVar]" />
+				</otherwise>
+			</choice>
+
+
+			{{#if checkLogRequest}}
+			<set-variable value="{{{inputRequest}}}"
+				doc:name="Set Variable"
+				doc:id="f58cf106-0ca9-4c85-8beb-6232f4cfc1a7"
+				variableName="saveDataWeaveExpression" />
+			<logger level="INFO" doc:name="Logger"
+				doc:id="d3ac63f7-5033-4d7b-bb0a-d75d3f1847fe"
+				message="#[vars.saveDataWeaveExpression]" />
+			{{/if}}
+
+
+			<http-policy:execute-next />
+
+			<logger level="INFO" doc:name="Logger"
+				doc:id="8def6a03-f674-4ac4-ba7c-a89610a58e85"
+				message="#['\n'] This is custom logging. #['\n'] - #[payload]" />
+
+
+		</http-policy:source>
+	</http-policy:proxy>
+
+</mule>
